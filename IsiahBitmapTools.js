@@ -6,6 +6,7 @@
  * @author Isiah Brighton
  * @plugindesc v1.0 A utility plugin that adds more features to the Bitmap, allowing for more advanced draw functionality. Covered under MIT License.
  * @target MZ
+ * @url https://github.com/IsiahBrighton/IsiahBitmapTools
  * 
  * @help
  * 
@@ -19,24 +20,64 @@
  * distrubuted, and so on as per the terms laid out in the MIT License.
  * 
  * ============================================================================
- * New Bitmap Functions
+ * Bitmap Function Reference
  * ============================================================================
  * 
+ * A detailed list of functions and parameter descriptions can be found in
+ * the README at:
+ * https://github.com/IsiahBrighton/IsiahBitmapTools/blob/main/README.md
+ * 
+ * 
  *     drawPolygon(coordinateArray, color, fill, thickness)
+ * This draws a shape of a solid color using an array of coordinates.
  * 
- * This draws a shape of a solid color using a coordinate of arrays.
+ *     clearPolygon(coordinateArray)
+ * Clears a shape made of the specified coordinates.
  * 
- * Parameters:
- *     coordinateArray - an array of objects with 2 data members each: x and y
- *         These are the coordinates within the bitmap that the shape will be drawn.
- *         Example: [{x: 11, y: 11}, {x: 25, y: 11}, {x: 25, y: 40}, {x: 11, y: 11}]
- *     color - a color value (string, hex color code)
- *         The color of the polygon to be drawn.
- *     fill - boolean (true/false)
- *         Whether the polygon will be solid (true) or an outline (false)
- *     thickness - integer
+ *     clearCircle(x, y, radius)
+ * Clears in the shape of a cirlce
+ * 
+ *     clearImage(source, sx, sy, sw, sh, dx, dy, dw, dh)
+ * Clears in the shape of the specified bitmap, ignoring transparencies.
+ * 
+ *     circlet(source, sx, sy, sw, sh, dx, dy, dw, dh)
+ * An alternate version of Bitmap.prototype.blt() which draws in a circle
+ * instead of a square.
+ * 
+ *     polyt(source, sx, sy, sw, sh, coordinateArray, dx, dy)
+ * An alternate version of Bitmap.prototype.blt() which draws in a 
+ * polygonal shape. A fusion of blt and drawPolygon
+ * 
+ *     blurTransparent()
+ * An improvement over Bitmap.prototype.blur() which allows the use of 
+ * transparent images. The edges of color may bleed and darken slightly, 
+ * and the effect becomes more pronounced when repeatedly blurring the same 
+ * bitmap.
+ * 
  *         
- *         
+ * ============================================================================
+ * MIT License
+ * ============================================================================
+ * 
+ * Copyright (c) 2023 IsiahBrighton
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN  THE SOFTWARE.
  * 
  * 
  */
@@ -138,11 +179,10 @@ Bitmap.prototype.clearPolygon = function (coordinateArray)
 	context.restore();
 };
 
-Bitmap.prototype.clearCircle = function (x, y, radius, color)
+Bitmap.prototype.clearCircle = function (x, y, radius)
 {
 	var context = this._context;
 	context.save();
-	context.fillStyle = color;
 	context.beginPath();
 	context.arc(x, y, radius, 0, Math.PI * 2, false);
 	context.clip();
@@ -162,21 +202,6 @@ Bitmap.prototype.clearImage = function (source, sx, sy, sw, sh, dx, dy, dw, dh)
 		this._context.drawImage(source._canvas, sx, sy, sw, sh, dx, dy, dw, dh);
 		this._setDirty();
 	}
-}
-
-Bitmap.prototype.generateCoordinates = function (amount)
-{
-	var coordinates = []
-	for (var i = 0; i < amount; i++)
-	{
-		var coordinate = {
-			x: Math.floor(Math.random() * this.width),
-			y: Math.floor(Math.random() * this.height)
-		}
-		coordinates.push(coordinate);
-	}
-
-	return coordinates;
 }
 
 Bitmap.prototype.circlet = function (source, sx, sy, sw, sh, dx, dy, dw, dh)
@@ -261,21 +286,3 @@ Bitmap.prototype.blurTransparent = function ()
 	}
 	this._setDirty();
 };
-
-Scene_Title.prototype.create = function ()
-{
-	Scene_Base.prototype.create.call(this);
-	this.createBackground();
-	this.createForeground();
-	this.createWindowLayer();
-	this.createCommandWindow();
-	this.createExtraSprite();
-};
-
-Scene_Title.prototype.createExtraSprite = function ()
-{
-	this._extraSprite = new Sprite();
-	this._extraSprite.bitmap = new Bitmap(Graphics.width, Graphics.height);
-	//this._extraSprite.bitmap.fillAll('white');
-	this.addChild(this._extraSprite);
-}
