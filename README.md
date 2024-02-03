@@ -181,3 +181,19 @@ bitmap.blt(face, 0, 0, ImageManager.faceWidth, ImageManager.faceHeight, 0, 0);
 bitmap.blurTransparent();
 ```
 The above code will draw an actor's face and then blur it.
+
+### clearByColor
+
+> Bitmap.prototype.clearByColor(color: string)
+
+Clears all pixels of the specified color
+
+| Parameters | Data Type | Description |
+| ---------- | --------- | ----------- |
+| color | string | The color to be erased from the bitmap in CSS format. |
+
+Example:
+```
+bitmap.clearByColor('white');
+```
+The above code will erase the color white from a bitmap.

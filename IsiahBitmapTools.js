@@ -54,6 +54,9 @@
  * and the effect becomes more pronounced when repeatedly blurring the same 
  * bitmap.
  * 
+ *     clearByColor(color)
+ * Removes all pixels from the bitmap of the supplied color.
+ * 
  *         
  * ============================================================================
  * MIT License
@@ -286,3 +289,18 @@ Bitmap.prototype.blurTransparent = function ()
 	}
 	this._setDirty();
 };
+
+Bitmap.prototype.clearByColor = function (color)
+{
+	for (var x = 0; x < this.width; x += 3)
+	{
+		for (var y = 0; y < this.height; y += 3)
+		{
+			var pixelColor = this.getPixel(x, y);
+			if (pixelColor.toString() == color)
+			{
+				this.clearRect(x, y, 3, 3);
+			}
+		}
+	}
+}
